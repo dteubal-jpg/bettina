@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bettina Teubal — Galería de Arte</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f5f0ea;font-family:'Jost',sans-serif;font-weight:300;color:#2a2118;min-height:100vh}
+  .hero{text-align:center;padding:3rem 2rem 1.8rem;border-bottom:.5px solid #c8bfb0;margin-bottom:1.8rem}
+  .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:.25em;text-transform:uppercase;color:#8a7968;margin-bottom:.5rem}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;font-style:italic;color:#2a2118;line-height:1.1;margin-bottom:.4rem}
+  .hero-sub{font-size:11px;font-weight:200;letter-spacing:.18em;text-transform:uppercase;color:#9a8c7c}
+  .year-tabs{display:flex;justify-content:center;margin-bottom:1rem}
+  .year-tab{background:transparent;border:.5px solid #c8bfb0;border-right:none;padding:.5rem 1.4rem;font-family:'Jost',sans-serif;font-size:10px;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:#8a7968;cursor:pointer;transition:background .18s,color .18s}
+  .year-tab:last-child{border-right:.5px solid #c8bfb0}
+  .year-tab.active{background:#2a2118;color:#f5f0ea;border-color:#2a2118}
+  .parts-row{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:0 1.5rem .9rem}
+  .part-btn{background:transparent;border:.5px solid #d5ccbf;padding:.35rem .75rem;font-family:'Jost',sans-serif;font-size:9px;font-weight:300;letter-spacing:.1em;text-transform:uppercase;color:#9a8c7c;cursor:pointer;transition:background .18s,color .18s}
+  .part-btn:hover{background:#ede7de;color:#2a2118}
+  .part-btn.active{background:#4a3f32;color:#f5f0ea;border-color:#4a3f32}
+  .count-bar{text-align:center;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b0a496;padding:.2rem 0 1.2rem}
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:0 1.5rem 3rem;max-width:1100px;margin:0 auto}
+  .art-card{background:#fff;cursor:pointer;transition:transform .3s,box-shadow .3s;opacity:0;animation:fadeIn .4s ease forwards}
+  .art-card:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(42,33,24,.1)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .art-frame{padding:7px 7px 0;background:#f9f5f0;border:.5px solid #e0d8cd}
+  .art-img-wrap{overflow:hidden;background:#e8e0d5;aspect-ratio:3/4}
+  .art-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+  .art-card:hover .art-img-wrap img{transform:scale(1.04)}
+  .art-info{padding:.65rem .75rem .75rem;border:.5px solid #e0d8cd;border-top:none;background:#fff}
+  .art-serie{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#9a8c7c;font-weight:400;margin-bottom:.12rem}
+  .art-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:300;font-style:italic;color:#2a2118;line-height:1.2;margin-bottom:.15rem}
+  .art-date{font-size:9px;color:#b0a496;font-weight:200;letter-spacing:.05em}
+  .lightbox{display:none;position:fixed;inset:0;background:rgba(12,8,5,.94);z-index:1000;align-items:center;justify-content:center;padding:1.2rem}
+  .lightbox.open{display:flex}
+  .lb-inner{display:flex;gap:2rem;align-items:flex-start;max-width:860px;width:100%;animation:lbIn .22s ease}
+  @keyframes lbIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+  .lb-img-wrap{flex:1;min-width:0;border:.5px solid rgba(255,255,255,.09);padding:7px;background:rgba(255,255,255,.03)}
+  .lb-img-wrap img{width:100%;display:block;max-height:72vh;object-fit:contain}
+  .lb-meta{width:165px;flex-shrink:0;padding-top:.4rem}
+  .lb-ey{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,185,165,.5);margin-bottom:.45rem;font-weight:400}
+  .lb-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;font-weight:300;color:#f5f0ea;line-height:1.25;margin-bottom:.25rem}
+  .lb-artist{font-size:10px;color:rgba(232,224,213,.38);font-weight:200;letter-spacing:.06em;margin-bottom:.9rem}
+  .lb-date{font-size:9px;color:rgba(200,185,165,.4);letter-spacing:.1em;text-transform:uppercase;border-top:.5px solid rgba(255,255,255,.07);padding-top:.6rem;margin-bottom:1rem}
+  .lb-link{display:inline-block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,185,165,.4);text-decoration:none;border:.5px solid rgba(200,185,165,.18);padding:.3rem .65rem;transition:color .18s,border-color .18s}
+  .lb-link:hover{color:#f5f0ea;border-color:rgba(200,185,165,.5)}
+  .lb-close{position:fixed;top:.9rem;right:1.2rem;background:none;border:none;color:rgba(232,224,213,.3);font-size:1.3rem;cursor:pointer;z-index:1001;transition:color .18s;font-family:'Jost',sans-serif;font-weight:200}
+  .lb-close:hover{color:#f5f0ea}
+  .lb-nav{display:flex;gap:.5rem;margin-top:1rem}
+  .lb-nav button{background:none;border:.5px solid rgba(200,185,165,.16);color:rgba(200,185,165,.38);font-size:15px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s}
+  .lb-nav button:hover{border-color:rgba(200,185,165,.5);color:#f5f0ea}
+  .lb-counter{font-size:9px;color:rgba(200,185,165,.3);letter-spacing:.07em;margin-top:.6rem}
+  .footer{text-align:center;padding:1.5rem;border-top:.5px solid #c8bfb0}
+  .footer a{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9a8c7c;text-decoration:none}
+  .footer a:hover{color:#2a2118}
+  @media(max-width:540px){
+    .lb-inner{flex-direction:column}.lb-meta{width:100%}
+    .gallery-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;padding:0 .6rem 2rem}
+    .hero-title{font-size:2rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Galería de Arte · Colección Completa</div>
+  <h1 class="hero-title">Bettina Teubal</h1>
+  <div class="hero-sub">Pintura · Collage · Partes 1 – 20 · 2024 – 2026</div>
+</div>
+
+<div class="year-tabs">
+  <button class="year-tab active" onclick="setYear('all',this)">Todas</button>
+  <button class="year-tab" onclick="setYear('2024',this)">2024</button>
+  <button class="year-tab" onclick="setYear('2025',this)">2025</button>
+  <button class="year-tab" onclick="setYear('2026',this)">2026</button>
+</div>
+
+<div class="parts-row" id="parts-row"></div>
+<div class="count-bar" id="count-bar"></div>
+<div class="gallery-grid" id="gallery"></div>
+
+<div class="footer">
+  <a href="https://bettinateubal.blogspot.com" target="_blank">Ver blog completo en Blogger →</a>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLb(event)">
+  <button class="lb-close" onclick="closeLb(null,true)">✕</button>
+  <div class="lb-inner">
+    <div class="lb-img-wrap"><img id="lb-img" src="" alt=""></div>
+    <div class="lb-meta">
+      <div class="lb-ey">Bettina Teubal</div>
+      <div class="lb-title" id="lb-title">—</div>
+      <div class="lb-artist">Buenos Aires, Argentina</div>
+      <div class="lb-date" id="lb-date">—</div>
+      <a class="lb-link" id="lb-link" href="#" target="_blank">Ver en el blog ↗</a>
+      <div class="lb-nav">
+        <button onclick="navLb(-1)">←</button>
+        <button onclick="navLb(1)">→</button>
+      </div>
+      <div class="lb-counter" id="lb-counter"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const B = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/';
+
+const PARTS = [
+  { id:1, year:'2024', date:'Nov 2024', link:'https://bettinateubal.blogspot.com/2024/11/obra-bettina-teubal-parte-1.html', imgs:[
+    {k:'AVvXsEhHEaGNTRZOPJ8dxDfs6d7o7O5huaBWfOMC8Ne_0PGg6it3AhYN5G5PCdfZ-R5xizz46TLi-xs4vE9ZFaj_bR-6mbfXHGnIfPdXHlHKlyXqqEFhg7Syii66R5EaLnUv_Ss4PWUGYBCnzdtd2QtlUZDYK42AQYmNgDuCLyEXh8JNljtAbINtyyXhpp4Hr90',th:'w646-h876',fn:'cuadro 10.jpg'},
+    {k:'AVvXsEhsr9PAG8uooqkYm3Op3rWMcquPB8G7sVQVAEEfCXa4C3rR_sqRsnideDCcN0woalhILQuP_vguAMZPlgpmW0wxvWoLWq0yjnTlqPm9NDpC1h8fC9I9kYTLmj_-sktultCJqqhBZB0kMjYHldHfshneYOV447C0J898IJ5zJLHzvXQ55qZxcRi3f5WpeOc',th:'w643-h981',fn:'cuadro 01.jpg'},
+    {k:'AVvXsEiW3PbtdCJkgmjRTQW4h7UTMO0EUHVDuJrZSWTej7QdobZIdpTt7Mdjj-6XxJ1RDlMRXZs0JsW6KUH8WK-FyL9by7mKiXkM4TyPmr3Q5sTriHgoyhul90cHvsrmUOqpv_Gf5k8674RzIK0B_NEaSv3J_zn1q4hT094tZoGHmNhPDvTNOdlWAmGfOwKKNL4',th:'w644-h927',fn:'cuadro 02.jpg'},
+    {k:'AVvXsEiSNB5qOmkwWfZULSjY2cFqOosE6BIICybgh_zA86w1hw4EXrrp9MxAn3l7cCcWR72J9fgxJn8TUmmlAeNjIt8wxG3mBnISMnfsE76gA0MTCZF2yFEBsmNRZgp9UNyuoaQYH56ZIaYHUEkPZkhkgXYbN13volJK2iaJDxF2L9d2gIieNJPC94Hx2xU2b0Y',th:'w637-h796',fn:'cuadro 03.jpg'},
+    {k:'AVvXsEj8a-4UvBLCioChMIYqlhpvsEY30kCWwuO3p7s7ZPgDKL00sT_LN2oqEHgMq-feYQDcogTL6qPDu8JT8Z-QTHfmm6aZEgBjs_ZqR_UnUgoZY89z1j3KqF69s6xbYq1qrv8ZOHiYgw4brotsAdMhsKcqja3z-dGk_p3hJIwpKYT5-mYuHITwio-hrfiZBL8',th:'w631-h814',fn:'cuadro 04.jpg'},
+    {k:'AVvXsEgPtbwn_6mU5mPI8UKFTUe31_ugMqvviR6PBjtVmuzJPvhHz1_ihNIfymcM-Iotf8Q4zEAPOyzktb6G6TVb4tmhyphenhyphen8SEQP_UPrGRJjxul8S4LKvWf-rElpWcK9zQCq6cZeVODtYuQsjazillQpyzJ1djfUb7qxBsAqE93iQ3ng-_PLsQfgZuEM5AtfAEpNE',th:'w636-h930',fn:'cuadro 05.jpg'},
+    {k:'AVvXsEhVQl91xw2KR7AhG5UQnblGfHFutdmG9ST0e0c8hbUPlQz3lr_9FCY8723Du-pCEgrBUtMeG4nxvEpkmgOxoyI7MUmnUzUVRhWmE1zE_RvoKYR8ojY2eru565BfSWwGJdBLnG_oBa4SCHJMryzT2V1X96Q-8LCS97KCbJ9en_ljGf7d42yj2YBAIae8NDM',th:'w637-h928',fn:'cuadro 07.jpg'},
+    {k:'AVvXsEg3WOVVrym0gF2QOfvdfQmhL9UL4XDxT00gxVU1VZzBSZ7qOEdajQAyGX0fLX4Vyw_4FGnPyUP8IvygnVyW_xKWyoIJDExo5KGkRroneZc-SDQcGOXl7TqP_-t2fZG_qyQsCHXqyuYTNMIf4N335DXdd5HXFq3QQVlLg4vTBMhVwefPLf6KVZkFBIxPysk',th:'w640-h952',fn:'cuadro 08.jpg'},
+    {k:'AVvXsEhYhjGxqKQ3TTty2QEzGBHdHq9gtJs8E7l6vke96gtnMGHZRucIqvbwh69p8Jc8ArFi7EfWA6VsfRI18lzQWqYnfq7YDBmZoxajtnMGkLsMHpb8839Sc2isIifH93k-0k_XZUtQ7hAl5Ww7XMf879ZE4Tdd_SnM7uEey1c8BFzIVFrAmC0aQJTSYJuBnz0',th:'w641-h571',fn:'cuadro 09.jpg'},
+    {k:'AVvXsEiR-zPoQo1bJYkIRw92cf6JYkWGmoem11PDaAt-2hZijkOh3FF3fPgw5JLNJ7ku4TEdxhrR-4lEk2a8Je942AF3e8AgzxNX0r6aDXSoNyQDknHFnHBiL8mm7Pt8zR8od5igHmQSE93vrgLX4CDF_QAOikGUFMmDsridyNxHbYggtNEvCqsEDFhIDQzup_4',th:'w639-h933',fn:'cuadro 11.jpg'},
+  ]},
+  { id:2, year:'2024', date:'Nov 2024', link:'https://bettinateubal.blogspot.com/2024/11/con-mi-obra-actual.html', imgs:[
+    {k:'AVvXsEhMf6dHaVNjGN6zvHj83-vV6h0_acIG36_vYb6BfgdSalmr5sXcdlJASDWKTLOfc65aCf2nBM_5NaOvQyMmTG2CGCOfgMG9RB_lSmv9YKeofTyftstPd8FSUTomUGXe2gVZfGEXPf5dgZpdxhMHzmrZ7mza_5udOwUD880JLLzYKWM8S3CkgQnbgR4f8rI',th:'w561-h819',fn:'cuadro 21.jpg'},
+    {k:'AVvXsEjyJv3-oxquMTbz0PsSvdRq5sRPS8-4QN_89NHK04wxMyz4BidJYrjoEx3l9URnIAjH07W_ChsSiwHKFAxDKahQrBk2QOwZn_p0ZCWjeGG0o8iyFLFE47Wgh-hHOGwwC_i5DOJr72PDCJD0_2zAy2tZFqnarUZ-COariw-amBtMvl8vJFbfj0YQVOLeQC0',th:'w564-h882',fn:'cuadro 13.jpg'},
+    {k:'AVvXsEgb3LnxOQxsyOMG3Tkowb9bYBx0wHv1AGe3xleJRpPTWiCLfJAl5eP7gDeiniHgWdRHHJJhYi3N6cBAv6-JUergUDobZhr3cfeXnSmFPC7yDfFKCtYxmLa7eNm1NuEzvhYtAyVW5yCTDAJZao6ZCg-gg3fOJFmNFwIsKOLLPhw8rmeart6DVpQJvIOeP6s',th:'w574-h922',fn:'cuadro 14.jpg'},
+    {k:'AVvXsEhGarZ9nClRuV5u4AuLM6KE_zYdKYHxcf8KL1lpqJXHnfGBYACvASiQ4Rz9lytlWpnG4vxbNVCZ-SeFHh-dAy-A4OLrA6-4nNTjgIxlDGHmTtlsLnow_CgpOsZDyNWTF1VbBla6iEb4P7ccqSLMUQHwPGhIz2905sDWCuaUkbfNrdk0BiBWIGgeiueulB0',th:'w585-h437',fn:'cuadro 15.jpg'},
+    {k:'AVvXsEhzJWaOpm9yrApWT6qA02tH1zDIOxJ6jdJZwVhMIcmVShLG4XgGGJeYjSPPRBI-Q6qzmBl07RNO0oOvgpYrg9-193AK3ZeNhY1zQG6iD6s7DF-hRymzlDXLubeM4S6mg1naRWCijv_5kgadeCLYGlWGBItq4QET9JnW05obU87TtMWmu8EodyfGW3aIWCw',th:'w586-h514',fn:'cuadro 16.jpg'},
+    {k:'AVvXsEjSIjgfWfJtOnz0HhZfpanm1DVKKVFkyXRfmCT1g27vIUR6kSD4SifP7KqtOOXHedt4TNwS9_ASeEZYWk14OwuNVsmFjFO_lyQjS1LE_s2AbZITYFlvtSEq8vbK7ddONF4Ep-RaOSrNdf6kWIvIs5wk1T4-SoRbPzmuseGdOI2p8tbBHCzkhDc2A0853Yw',th:'w582-h733',fn:'cuadro 17.jpg'},
+    {k:'AVvXsEiMAXeT9Y29nZ_adBQx3-JnecdGvd0FFJKehuIAJkLiYPSuPG0Yff03udu1Od3WGo0kr7ML62z2QwZVTPCC3YGjB4JU_eGNrpna-q9zKV8ny1Gl6sdyvkzEbNiGAmP-hK8IvEpRdyYVpZfoWFcqws9b_v2WmB2oVAtajP1NyH51Ai5FcolPAxx8SfKswE4',th:'w581-h842',fn:'cuadro 18.jpg'},
+    {k:'AVvXsEjNb7bPPuEYt-zglTgKZbtSHnSHXKUWuD0q6K8N3lL1feQlvFxEYxik7iTA57gWuy1abBeeybPvjritQeC0-kpfowXgkU4lEQx46zSUJmjxx5JSKJJrrbf595GjXcSIfbcf-Rt_UzOeueSbE1wq3eb89orfTdvjAc09ihrYazF3H2nBZ8qg0RsgyDhDdm0',th:'w581-h926',fn:'cuadro 19.jpg'},
+    {k:'AVvXsEgHt1OvVcxFTHPDNkHQD5fRFlKg14WkgEKUkoDGIxwuxTC0X_mMM0XzThs3L0r91NsLfES5CYCvKzQBbPu_WWC9DKvQbLDRfqbT7ixUsguPnLFm9o18wEtLDbEVO-vUKPoEe6GIr-gjJWwCtOforADWu_7PgYxlDALDsyka_7eF6fS4jQ_37pmMyKENAYY',th:'w593-h864',fn:'cuadro 22.jpg'},
+  ]},
+  { id:3, year:'2024', date:'Dic 2024', link:'https://bettinateubal.blogspot.com/2024/12/obras-de-bettina-teubal-parte-3.html', imgs:[
+    {k:'AVvXsEgwdAxkdER2oAL5NDnbDLoXDmbXZAu1cZ8SCWXfkmAXQLEKHftBoD78ajYxxoWBQUzVHRVA7nFtKCek5V643pB4JbFcV6hYFYUaVY8SLOO_ogJ0qDsSOJDmcJpQpqWi2jnebHSbB0P8mavsn_fhxC4iLtmJm6FDNyY9JG1M2t7OFSUAbPeMF5K1YUN7azU',th:'w515-h736',fn:'Cuadro 30.jpg'},
+  ]},
+  { id:4, year:'2024', date:'Dic 2024', link:'https://bettinateubal.blogspot.com/2024/12/obras-de-bettina-teubal-parte-4.html', imgs:[
+    {k:'AVvXsEj-HUtFQ4h-fY8Efmgd4C3YO50DwFRs4eHnb7aCUueW1qsh1rFIlhBupmV8h81Ja2LJ9gcDER6Pokq8MmZFA5Mq8gP5aAIFVvHo4bj87486nHnz_Q1pKPQOsME9A17O0stI5WHUuX42aS6TPbPzhc_LP7ajJFfQc3WV2iDp8FSPtAdKvY_Y2lge-13ZLwY',th:'w643-h887',fn:'2 Caras.jpg'},
+  ]},
+  { id:5, year:'2024', date:'Dic 2024', link:'https://bettinateubal.blogspot.com/2024/12/obras-de-bettina-teubla-parte-5.html', imgs:[
+    {k:'AVvXsEhkgV6W8qnXzgQzShWSXPAF7G27D0LM5-b1UrmKp4RaP1TVRj-0PGuxEOZdxh2dd3CLOYwT5NsbxUSFOOiIGSuTdqlsojk2wSwb_lQhFEEQ99LTwHCa5EATQ-5mZAd6zEZrzuhzILkTsh7TDbOGNI4wcJ6OjYSHl8LOuW10smctpc59M-tku-ClH-4uANI',th:'w605-h922',fn:'Cuadro 29.jpg'},
+  ]},
+  { id:13, year:'2025', date:'Abr 2025', link:'https://bettinateubal.blogspot.com/2025/04/obras-de-bettina-teubal-parte-13.html', imgs:[
+    {k:'AVvXsEgKvNrpKeymrdYl9FYOG4f8SVwXC2b4dUt2gBPwW6CPEhg-mo8k2S7Aw-I98Fh1iiQHy4cbyCRN84m2TQSKbYS2Pn77G7Nih35XfjqjGq667tnYU_japFlqxzIMZpvuqq6x-R_UeYB49YIfoiTY1nokgUZ5AAKsoAIETAVFrKWdU_nA37JsvHRthfw0K2E',th:'w607-h890',fn:'Obra 01.jpg'},
+    {k:'AVvXsEg-n6cZXbqH0GTMhGGLcjmDWQGy7k1_NQPDyG29BsI4_dRe8PnWP7rnFsKGZlQejH15csF-xt37PM5-A_85HN4OX4Tb5zOV1aJ9of66BQW0GLkOySdZAujKUOmXX_wxDEuosAsTyxmHxRBWDzljQSPmTnhkfShdulvQa3iT8HQL5HaiI_2zZjmjgtgU4mY',th:'w610-h891',fn:'Obra 02.jpg'},
+    {k:'AVvXsEh0eI60dpRE163nRyMK5ay8eKv0WBRjBbFtL6e6mR_wfjMAjFI3qAIYFXfQrzOeqInF730v1-GUNFAjz0P60OqVx1APCJrW_xVOTk3X8WZy7NFmSU4qsgQrJuYoS8aP84D95v0_e7FpfAdPeNQblWny1iz8aj3jBxPicGL79rrhgwkPXeg-opb3N2Kqk1E',th:'w607-h852',fn:'Obra 03.jpg'},
+    {k:'AVvXsEjVMkiYeFPvQe8eArDll0x88iAUgUqLeHJKF-iG0cpNoUegaN3HKFESIznIoTqKmZ0ZfPg0Qmdzm4EXTjdsMcbPRMxLa6mBge7Q3iWnWedCIK3m6A7IRZdtBSuUTGAo3t8b5Uw3FyynoYsZaEa3bj-iS1Ge24fp8bxAllcIY6QtY37ab7_jwKrZhyphenhyphenZqLfg',th:'w607-h884',fn:'Obra 04.jpg'},
+    {k:'AVvXsEikD6BaIRXoSOHhexKiF7XKM_eVY1VbFIFUThdlAIq4x5iR_a7_lHq1CqClEC2nX57nKH5DPV0uXoWwKVZx7VLMpuAKeNUQkyKIPYLK90lUPkalqtqd3NxYWVTPVog7oAq-gc5P0IT0OdUEMxdXxRhGlc44YT465zLGfKFr1dFpIsh8rZxjbLBotk26ULM',th:'w606-h815',fn:'Obra 05.jpg'},
+    {k:'AVvXsEiKa5mmmJRytitszc6dvjw6ZkHAoARzw8Ozmo882bD8v1grgJtuq6DqlCk79phJ9oWFEuFQuEhIPZFnv2QuMifqUwhRXKED0E5JB3gcWZvY36wP7ueaenDqLTMTr-HFKiJupp-boEdsLfU3q9KQl4mVTC734n39Toztf7q038PA7ZBNnQ3GVMeZ8_ACN5k',th:'w604-h875',fn:'Obra 06.jpg'},
+  ]},
+  { id:14, year:'2025', date:'Abr 2025', link:'https://bettinateubal.blogspot.com/2025/04/obras-de-bettina-teubal-parte-14.html', imgs:[
+    {k:'AVvXsEjIMgQEz2R6xItklG0ow1Bpadu4NzHGX45zOfpeE6yBkkfRuPxrmjzpIcZk4nzgeauO8RU4YBY8-XpMHo_45D-5P4_vff-G1dqr206GX5qcX30y5KvpbjlWZdStX18sfer1PPysqPtlNFkys8ImdlBeYGZIIZ5sG8_mTXZ6gedWTCuNvjfiyENuTzQQv8U',th:'w599-h870',fn:'Pintura anterior 2018.jpg'},
+    {k:'AVvXsEhraaSp3TT8_o4-5GkcOKyG4rwQMUA06PBeZ4czr_YnA7FoNxjJP2w9UalA6QhwIJCN82mrtQzU7gnjxrCKomDoYmPsvzCsM0Jp4pyableSiTNGW0zAvmSQLs4DYU54WW8pth9x6I8nmxkiJPMiVwosDyLSGbARYfcZxkLNEmchnKMV_5M5DfMH57rKI6I',th:'w611-h441',fn:'Klimt.jpg'},
+    {k:'AVvXsEhVeDI9-II3wQggtT5FHTT0fyre804STpCnD_vVcHdJSwZl1LOA4Zg-f9zEj1mrdKKoMytCsosbsQVTQBMF9xg9pto5ZprHhfbSqkBlp523MhppD1wcL2nctGBUCwLfGPS2rVts9ihDLy47I3nlIZPwpCLyiyNe6Thq0Hl7Ott4U2hL7c-gxIQQzEdeQX0',th:'w622-h898',fn:'Pintura 10.jpg'},
+  ]},
+  { id:15, year:'2026', date:'Feb 2026', link:'https://bettinateubal.blogspot.com/2026/02/obras-de-bettina-teubal-parte-15.html', imgs:[
+    {k:'AVvXsEhla_LNXTV5hz0RzaAvL-5F62S06CIRPBrfFcmTbOLGDLtpaOSd5ngZGtlXC5QXVBE-yxSKAEkU3myl3ln8zQnsjucnm4jEeiIKqRkFEYMHCpLUI0XWRWhY690BsAm3tvV9yc7vixro5O9T_YOzIFqhtx5lMa_m4ySA2wH8XDmyUozbC50ku-eSkzqsN2k',th:'w652-h931',fn:'pintura 40.jpg'},
+  ]},
+  { id:16, year:'2026', date:'Mar 2026', link:'https://bettinateubal.blogspot.com/2026/03/obras-de-bettina-teubal-parte-16.html', imgs:[
+    {k:'AVvXsEhrUvpUT909Zgwe3dB4T2W87zVWFM2HCuCdZgDp3rdZAB-BiUfRDXZakifo5yWgnpiPON9cCos-Fg4tUKcHkOqQh4BpuKLQNyqXpQjSKv4WVwNcKvFCnN9372RyI3nwQwJMEls7pW32tOtnILOF3qN8CRJvK1f-GAfePUWBdkdmDiYD2T0RAyYHnCtSdz8',th:'w751-h516',fn:'IMG 7552 recortado.jpg'},
+    {k:'AVvXsEj8DAljUUtfPXl9PB-bVF5neI0ASQuWq10a1xhgXQ2U8PULjlSK_Y6cu3MZFTEAj-6DPc-TjB9k7RglJFFKnlTx2GxnRNUgfkndwEzK9vBlxgp7PeNRT7nT4rJhtSYk-_HB_1cEWO4bsKvYipiK75b-jADmGims-sKFvYy5K_T3Q2n2vGXmoa33KkAL2Hw',th:'w354-h1059',fn:'obra 53.jpg'},
+    {k:'AVvXsEiyCu7tC0r6S7iwFeVlvxcpbhaQPHh4A2KmO9WyabTTRHdAJVRaYvOW19ldEJ4D7MBpy8TTiZVneBxuZMeigq8qAW2fw35TjuC4c2wbPUEY2gSBJ3ubz8S14Uch5SW-gHYcusfO05QYS5prIlnsm25dtckAbXbjtIZlyO7uFAITkYOI7YznswRs5vIYJ6s',th:'w614-h865',fn:'obra 54.jpg'},
+    {k:'AVvXsEhXLNQLe7aR-ZBFuIiIfFTn-sttlXeRGxCz1TbinYEeKrCXXruUSClI61OZt6ztm2UWl9BtGdjqsOAtWKrDq2SXuLlBzNxGpu3qRyAFCNtmklRq1TkJYO_wgL3l3fGg6-EYPkmm1cHvhT9dfrcLY_-IzdJBjGoCAOAmua3jFmZhed3yfEXpU62ajdQvRf8',th:'w650-h875',fn:'Pintura 37 con marco.jpg'},
+    {k:'AVvXsEjUgvgc7hC6n0khGlIoEi_Rt7O1jxhpHwJ9xHli0DGUolZhiSUGnaxWdNmHxQpI6I6_muo7KCgYMtjK8GtE_g53C-ZESfQ1XJ-s9I4Xgf6p02RhG2xystJGdCg5wzcdnNtUWy6h4aFSBNimtbAmH9uuR_G6-YB9r1YfLrN79PTiC8EYckpJiQy3dBQ7YEc',th:'w622-h845',fn:'Pintura 38.jpg'},
+  ]},
+  { id:17, year:'2026', date:'Mar 2026', link:'https://bettinateubal.blogspot.com/2026/03/obras-de-bettina-teubal-parte-16_23.html', imgs:[
+    {k:'AVvXsEjeAFnopB-qs_bFhTMSNpNWxtfjUp2FTMS3fw4xtx8ToFyct-h7HSjzCLJSmu32aVeSvah3zqVFPKJ3ybnt3JdpwxrFJ4wmoWk1G0VZrQa2vn3tjansfKQsK_ceAYJXoK0vr7x0asoOLGf6u-Fhe4fJT0NGlIplG0lssLvixNCjjGfgv-38FlXgmTYOIHg',th:'w670-h910',fn:'Obra 20.jpg'},
+    {k:'AVvXsEiRq-kD2blIYbPQ43Rbk70O6DUe9laszZpq3J5UNymZF5ORVF5yiu-ZF0LkHfdREyD4JThRANwInOqaE2raff8GAL2BXtjxeIV3tz-LC9soNNoIflw5PYCKtVdz4RfETU5Nq0v2DE4IPrxl7NgqMCcasn7fgIfL8PCgJsxfUuYz9DD8mhZmm-_L-A_Y7FE',th:'w668-h908',fn:'Obra 22.jpg'},
+    {k:'AVvXsEit46g68VJqjVCwnXm_8mA7Lr2ODLnpOvJ2jTA_v5HUs98CdwNpVuIxRhva1nuiJ5dE9LBVRsUMym-cDBR8b23r3Y2wmapvvSs37s5fDvzbA5FcJ40aWwhDWtkW7XwVBBFv4TZXPdnjH54B2xO0NlSW3ZE02bl6epJw3CSIbiT8YlOFZwjipp6ouJyUWlc',th:'w670-h975',fn:'Obra 27.jpg'},
+    {k:'AVvXsEjdyZFbm7oqfCIZ_IqR3RaXCV9OEnZN9xhlT7Fnw7GluqhOvZDyjDIPi7EM9Cu1jUNnyEfIrWsc1VvDxKpPt6RMN3dBVOc_FMOv8SL0WKvQ2LeVAwWlRoGcRWuRrYQzwzeypAURwtLGFL0rCN5wpu4-xliIXLYhFCVEfkvhmlsKT0p8hjgeT3OnyP74pJo',th:'w660-h954',fn:'Obra 28.jpg'},
+    {k:'AVvXsEipVeuGuE3INJonhpctG7CSWdb5qgxBQWBjDkjEALfR31ha3h4khn-GSvgVGJTaPILy4cR1qIkHd_cqb6dB870wlqHnbV3dMSg1yyvboCcc_QZZD-wr0fwIo8s-4gJ7DRnRGSzJjqQy318xZO_ipko2TK824SyBXEa8m2yL_Kpg8tZAOMRRSn76H0u3bpg',th:'w656-h894',fn:'Pintura 36.jpg'},
+  ]},
+  { id:18, year:'2026', date:'Abr 2026', link:'https://bettinateubal.blogspot.com/2026/04/obras-de-bettina-teubal-parte-18.html', imgs:[
+    {k:'AVvXsEgdtl68CPEFCd7UlkBPgLl2k1FLG1revPw1YugdPouyBXH56rQpKBiH-x2NeTwZ3noqjl4egUUnJpBD6pgpO_kBBnJUqpuQN5hl3c3-Jf656w4shnnA9JvenVRhZNTaharaOKzrXTefidihGle7-946RMTe1b1dWn4CVFBf7Uv0g1gIOoXgkCvFyzFTcC8',th:'w612-h823',fn:'Collage 01.jpg'},
+    {k:'AVvXsEgJXdmw2h0XWc-bWkMir0Xb8veisyr_SlbSnqubNr4K5TKJS_qJg2Djp1yMi-xuiMXd4DvA1His8KHyonXgw8ovHUKlrrbU6YZG1EmIBy8EjeQq8p1pgSCawQQB6MdSMlYOJkjdqwA8nzA1SzPpyUQfWMTLRtREMUuzC4k_fuSqxCWs5nvy6Ek1iLbNpr4',th:'w608-h784',fn:'Collage 02.jpg'},
+    {k:'AVvXsEgDxJcjE5ovfQxv88k0HAV73y_xSfRn1J3ldn4capxnN10cFirDHsgx3L5Okra0qfGPYi4WpxtSUQ0q-qNWz1ReSvt8DOeNWnk8Y2iE79Da0MHRIFnqqzXITG1ZIulbH1Y929ZdSEGzWRWUJc7OMEb94PbIAgbhzP7utcnrH4dxAuDWMsIYL-9nI9dE-Oo',th:'w606-h774',fn:'Collage 03.jpg'},
+    {k:'AVvXsEjm7Dslz0p7lVfm77IpIkaUcQgkqNhlsfnWqPHq0V9EGkfJlRwopHQKrCYk1tFsBUdpPYELI8KVHfWoI3ixj6cjWeYibnTfkPmAVRh6h88Pc_m66rlggoxigyeWs3-pIDl3pybdvrPmFNGl9-vl8VX7xSRIRziqDNHfmWPje4E0_41pTLGOgJdVN7TPhZQ',th:'w603-h823',fn:'Collage 04.jpg'},
+    {k:'AVvXsEgdX912JVL09ONml0mG62zehwGYTHmG6fewPJGSZp65eW6CkptUfCGv5ahyphenhyphenGErSEmI5DN4xj6WrlQa1nfILA4CDYd-yXLLwZAFxyfQ5WICvawNmK0lG1utUHgErVQNU5k6wV4sJvDfDZy5K-2CbF6GRE0TK_x1Qhd6Gb1QudGeSnmT2XNChOqqitcmmvxQ',th:'w605-h856',fn:'Collage 05.jpg'},
+    {k:'AVvXsEiWpnxs_fjh1ssa5zGn4onAuwWa6Y9tWJisVYT9Tnb6OGi8pwXweaNcp6N_SdWZBAQy42A2ku6ddKtdjf7uH1rASM-6B-5iMNiKOtXWaU4Pe0Y9ERD4tOy-yIoyAdK4MLrSb37asltP8lil3_IRlxsKcydbFOwiifE4RL6aHQgY7FBdXakVw-vehN2pIpw',th:'w606-h829',fn:'Collage 06.jpg'},
+  ]},
+  { id:19, year:'2026', date:'Abr 2026', link:'https://bettinateubal.blogspot.com/2026/04/obras-de-bettina-teubal-parte-19.html', imgs:[
+    {k:'AVvXsEhw7SL8QmfOs1ausXvoMK2sfsjvN1qcXPllJVsobryAgdGj_mcD7npK8NxYbmjvj2igcAHRbfBcbwJTPuWUgmEHnKALrgInrlW63Lkcu9lYNCtIa5cXYF3CMzevNPiXt8yp8z-iRzfgZrW0Sl1jXHObTgYeSj8dTmLZiH7_ho4wa13NgaxB2DBJTSid__o',th:'w630-h1078',fn:'Obra 59.jpg'},
+    {k:'AVvXsEjqmTbGOKZKToVEPFpnF5ts7IHU5QwP7BW5uuB6p4sLtvyPctRu1SNAZ-S7D_2byLeKSI1RaciWV9jDkm4oyyoqelmIRAi_rIPE09W_ROrrxQcHxCZ6yclbXvZftUp5wyCiVCnKbCpqewQrwBPiSCrrCUdwazh2qyhRhMYI_IIXwkiQpNKvCLTiI1W0K6c',th:'w627-h854',fn:'Obra 60.jpg'},
+    {k:'AVvXsEjymsmA_K8W6x4GxNuy0aF5JIHXUb_PvJslhbxu3MIn-DOiVi8VUqf0ihd1427VIynTM2Tw2GDy9-9eIhu67CzjlTc9EgLABuHhm-he3cah7sQ6Q2WVirecr0QO3iwWf6keOIp6SdHuU9c6a9QmqdDiUjD2MkNdcPMphd_BHd0P_8qx6VAAZdcZUqeYPwM',th:'w639-h874',fn:'Obra 61.jpg'},
+    {k:'AVvXsEjc-2SUAYakPlAyKyLfKH-Xsd-2_n01QFB0PQFGzBjQF9ZwzLpAf7UFrpi9TDf0mvYbqktHrihyyD5wovdG_m0I_gK9O1NghXeiU7OaOWjc7OGlEH1utLfF6hhj-XTAxDis_QF3EvqpRrWClrZjrSwIRTKoPZ-OgSyrLppBvxwUoKYe6D768Omq7uN6j38',th:'w642-h872',fn:'Pintura 80.jpg'},
+  ]},
+  { id:20, year:'2026', date:'May 2026', link:'https://bettinateubal.blogspot.com/2026/05/obras-de-bettina-teubal-parte-20.html', imgs:[
+    {k:'AVvXsEjrPZWFOThhgaxXR6e44MM-2IIzIHB4iTElyVhxXHzoTAvgwIoTTzNdaDL3x0GE9EMTo94Fg14jOC8aIpUNTq3oNpizYqle52T6ncpY2Az9J3GGTKnFBxfvSCPbpSjmM9IHeUy3KaVyVZBZiZbzkHIZmXiTnS7Si6Y-VTUDGhT5fYxU4lhD1JiwbeGh9Jk',th:'w616-h853',fn:'Obra 01.jpg'},
+    {k:'AVvXsEiTvxLEZi_WlBV4obXv1_Fw7pbDQHjBlK54DVGspDHe4bls5Um5KovutkZEssJiiGdK2Q3ixeagHtCnHKnu39S8yRWn2SkT3g24nwe05H1kUthQe2-7ba-TqXmJDCH9c1y4z2E2LHyD_xRAQgXfBpzwBFyZM-8ilTISrps63Tusp1zBrx4rwBrKVnqnG-Q',th:'w615-h836',fn:'Obra 02.jpg'},
+    {k:'AVvXsEhh0ZqXqGwnpfiKzMDUxmqZZB2iBYNx5_mGtQIICGhbuCZPHfwLylUHfKtJPTqLop3kvZwe7ApY4C0Sye9ksJDoILIFdx58AK5t4YHHyG0YuapcNi105kIkhgkII_3MePJtvdE6vA3yHCy__yBIwoymFr6YsQMyFq-fI4oIdAcL22lOLTUehcSTxpYEI3A',th:'w624-h842',fn:'Obra 03.jpg'},
+    {k:'AVvXsEjWWvs21ri5_iU0xKI0szkENletl_9J0n3zFt8iGICNVTsrMSj38Tx-LVEfY_CWRp6YeDewlatulTq7Kt0AuCBA02hPg3ccJdQ7JMoPklDZe3LlqpjI_NMnhDfY_BuzkXeT8nKaIew3fhNh9gZQPJUEu2DSthx_wT0ZaeVCHpN10zRIvrf2yXyUCp2jHEM',th:'w627-h838',fn:'Obra 04.jpg'},
+  ]},
+];
+
+// Aplanar todas las obras
+function buildWorks(parts) {
+  const all = [];
+  parts.forEach(p => {
+    p.imgs.forEach(img => {
+      all.push({
+        thumb: B + img.k + '/' + img.th + '/' + encodeURIComponent(img.fn),
+        full:  B + img.k + '/s2000/' + encodeURIComponent(img.fn),
+        title: img.fn.replace(/\.(jpg|png)/i,''),
+        date: p.date,
+        serie: 'Parte ' + p.id,
+        year: p.year,
+        partId: p.id,
+        link: p.link
+      });
+    });
+  });
+  return all;
+}
+
+const ALL_WORKS = buildWorks(PARTS);
+let filtered = [...ALL_WORKS];
+let activeYear = 'all';
+let activePart = 'all';
+let lbIdx = 0;
+
+function buildPartButtons(year) {
+  const row = document.getElementById('parts-row');
+  row.innerHTML = '';
+  const relevant = PARTS.filter(p => year === 'all' || p.year === year);
+  const allBtn = document.createElement('button');
+  allBtn.className = 'part-btn active';
+  allBtn.textContent = 'Todas las partes';
+  allBtn.onclick = () => { activePart = 'all'; render(); document.querySelectorAll('.part-btn').forEach(b=>b.classList.remove('active')); allBtn.classList.add('active'); };
+  row.appendChild(allBtn);
+  relevant.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'part-btn';
+    btn.textContent = 'Parte ' + p.id;
+    btn.dataset.pid = p.id;
+    btn.onclick = () => {
+      activePart = p.id;
+      render();
+      document.querySelectorAll('.part-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    row.appendChild(btn);
+  });
+}
+
+function setYear(year, btn) {
+  activeYear = year;
+  activePart = 'all';
+  document.querySelectorAll('.year-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildPartButtons(year);
+  render();
+}
+
+function render() {
+  filtered = ALL_WORKS.filter(w => {
+    const yearOk = activeYear === 'all' || w.year === activeYear;
+    const partOk = activePart === 'all' || w.partId === activePart;
+    return yearOk && partOk;
+  });
+  document.getElementById('count-bar').textContent = filtered.length + ' obras';
+  const grid = document.getElementById('gallery');
+  grid.innerHTML = '';
+  filtered.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'art-card';
+    card.style.animationDelay = Math.min(i * 0.04, 0.6) + 's';
+    card.innerHTML = `
+      <div class="art-frame"><div class="art-img-wrap">
+        <img src="${w.thumb}" alt="${w.title}" loading="lazy">
+      </div></div>
+      <div class="art-info">
+        <div class="art-serie">${w.serie} · ${w.date}</div>
+        <div class="art-title">${w.title}</div>
+      </div>`;
+    card.addEventListener('click', () => openLb(i));
+    grid.appendChild(card);
+  });
+}
+
+function openLb(idx) {
+  lbIdx = idx;
+  const w = filtered[idx];
+  document.getElementById('lb-img').src = w.full;
+  document.getElementById('lb-title').textContent = w.title;
+  document.getElementById('lb-date').textContent = w.date + ' · ' + w.serie;
+  document.getElementById('lb-link').href = w.link;
+  document.getElementById('lb-counter').textContent = (idx+1) + ' / ' + filtered.length;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLb(e, force) {
+  if (force || e.target === document.getElementById('lightbox')) {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function navLb(dir) {
+  lbIdx = (lbIdx + dir + filtered.length) % filtered.length;
+  const w = filtered[lbIdx];
+  const img = document.getElementById('lb-img');
+  img.style.opacity = '0';
+  img.style.transition = 'opacity 0.15s';
+  setTimeout(() => {
+    img.src = w.full;
+    document.getElementById('lb-title').textContent = w.title;
+    document.getElementById('lb-date').textContent = w.date + ' · ' + w.serie;
+    document.getElementById('lb-link').href = w.link;
+    document.getElementById('lb-counter').textContent = (lbIdx+1) + ' / ' + filtered.length;
+    img.style.opacity = '1';
+  }, 150);
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') navLb(1);
+  if (e.key === 'ArrowLeft') navLb(-1);
+  if (e.key === 'Escape') closeLb(null, true);
+});
+
+buildPartButtons('all');
+render();
+</script>
+</body>
+</html>
